@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>three.js webgl - glTF loader (MOD)</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link type="text/css" rel="stylesheet" href="main.css">
+</head>
+
+<body>
+	<canvas id="c"></canvas>
+	<p>
+		<span id="first" class="diagram left"></span>
+		I love boxes. Presents come in boxes.
+		When I find a new box I'm always excited to find out what's inside.
+	</p>
+	<p>
+		<span id="second" class="diagram right"></span>
+		When I was a kid I dreamed of going on an expedition inside a pyramid
+		and finding a undiscovered tomb full of mummies and treasure.
+	</p>
+
+
+	<script type="module">
+
+		import * as THREE from './build/three.module.js';
+
+		import { OrbitControls } from './jsm/controls/OrbitControls.js';
+		import { TrackballControls } from './jsm/controls/TrackballControls.js';
+		import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
+		var wallSpeed = 10;
+		var container1;
+		var camera1, light1, scene1, renderer1, controls1;
+
+		var container2;
+		var camera2, light2, scene2, renderer2, controls2;
+		var clock = new THREE.Clock();
+		window.addEventListener('resize', onWindowResize, false);
+		init1();
+		init2();
+		animate();
+
+		function init1() {
+
+			container1 = document.getElementById("first")
+
+			camera1 = new THREE.PerspectiveCamera(45, container1.offsetWidth / container1.offsetHeight, 0.25, 100);
+			camera1.position.set(0, -1, 0);
+
+			scene1 = new THREE.Scene();
+
+			light1 = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+			scene1.add(light1);
+
+			var loader = new GLTFLoader().setPath('models/_Custom/infinty/');
+			loader.load('HugeWall.gltf', function (gltf) {
+				//gltf.scene1.traverse( function ( child ) {} );
+				gltf.scene.name = "wall1"
+				scene1.add(gltf.scene);
+				let m = scene1.getObjectByName("wall1");
+				if (m) {
+					// m.rotation.y = 180
+					console.log("wall1")
+				}
+				render1();
+			});
+			loader.load('HugeWall.gltf', function (gltf) {
+				//gltf.scene1.traverse( function ( child ) {} );
+				gltf.scene.name = "wall2"
+				scene1.add(gltf.scene);
+				let m = scene1.getObjectByName("wall2");
+				if (m) {
+					m.position.y = 10;
+					console.log("wall2y")
+				}
+				render1();
+			});
+
+			loader.load('HugeWall.gltf', function (gltf) {
+				//gltf.scene1.traverse( function ( child ) {} );
+				gltf.scene.name = "wall3"
+				scene1.add(gltf.scene);
+				let m = scene1.getObjectByName("wall3");
+				if (m) {
+					m.position.y = 20;
+					console.log("wall3x")
+				}
+				render1();
+			});
+			renderer1 = new THREE.WebGLRenderer({ antialias: true });
+			renderer1.setPixelRatio(window.devicePixelRatio);
+			renderer1.setSize(container1.offsetWidth, container1.offsetHeight);
+			renderer1.toneMapping = THREE.ACESFilmicToneMapping;
+			renderer1.toneMappingExposure = 0.8;
+			renderer1.outputEncoding = THREE.sRGBEncoding;
+			renderer1.setClearColor(new THREE.Color('skyblue'), 1.0)
+			container1.appendChild(renderer1.domElement);
+			console.log(container1.offsetWidth, container1.offsetHeight)
+
+			controls1 = new TrackballControls(camera1, renderer1.domElement);
+
+			controls1.target.set(0, 0, 0);
+			// controls1.update()
+
+
+
+
+		}
+
+		function init2() {
+
+			container2 = document.getElementById("second")
+
+			camera2 = new THREE.PerspectiveCamera(45, container2.offsetWidth / container2.offsetHeight, 0.25, 20);
+			camera2.position.set(0.0, 0.0, 4.);
+
+			scene2 = new THREE.Scene();
+
+			light2 = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+			scene2.add(light2);
+
+			var loader = new GLTFLoader().setPath('models/_Custom/infinty/');
+			loader.load('HugeWall.gltf', function (gltf) {
+				//gltf.scene2.traverse( function ( child ) {} );
+				// scene2.add(gltf)
+				render2();
+			});
+
+			renderer2 = new THREE.WebGLRenderer({ antialias: true });
+			renderer2.setPixelRatio(window.devicePixelRatio);
+			renderer2.setSize(container2.offsetWidth, container2.offsetHeight);
+			renderer2.toneMapping = THREE.ACESFilmicToneMapping;
+			renderer2.toneMappingExposure = 0.8;
+			renderer2.outputEncoding = THREE.sRGBEncoding;
+			renderer2.setClearColor(new THREE.Color('skyblue'), 1.0)
+			container2.appendChild(renderer2.domElement);
+			console.log(container2.offsetWidth, container2.offsetHeight)
+
+			controls2 = new TrackballControls(camera2, renderer2.domElement);
+			controls2.target.set(0, 0, 0);
+
+			window.addEventListener('resize', onWindowResize, false);
+
+		}
+		function animate() {
+			requestAnimationFrame(animate);
+			controls1.update();
+			// console.log(scene1)
+			let m1 = scene1.getObjectByName("wall1");
+			let m2 = scene1.getObjectByName("wall2");
+			let m3 = scene1.getObjectByName("wall3");
+			if (m1 && m2 && m3) {
+				m1.position.y -= wallSpeed / 100;;
+				m2.position.y -= wallSpeed / 100;;
+				m3.position.y -= wallSpeed / 100;;
+				//  console.log(m.position)
+				if (m1.position.y < -5) {
+					m1.position.y = 25;
+				}
+				if (m2.position.y < -5) {
+					m2.position.y = 25;
+				}
+				if (m3.position.y < -5) {
+					m3.position.y = 25;
+				}
+			}
+			renderer1.render(scene1, camera1);
+			// mesh = scene1.getObjectByName("wall1");
+			// mesh.position.x += 0.1 * Math.PI/180;
+			controls2.update();
+			renderer2.render(scene2, camera2);
+		}
+
+		function onWindowResize() {
+
+			camera1.aspect = container1.offsetWidth / container1.offsetHeight;
+			camera1.updateProjectionMatrix();
+			renderer1.setSize(container1.offsetWidth, container1.offsetHeight);
+			controls1.handleResize();
+			render1();
+
+			camera2.aspect = container2.offsetWidth / container2.offsetHeight;
+			camera2.updateProjectionMatrix();
+			renderer2.setSize(container2.offsetWidth, container2.offsetHeight);
+			controls2.handleResize();
+			render2();
+		}
+
+		function render1() {
+			renderer1.render(scene1, camera1);
+		}
+		function render2() {
+			renderer2.render(scene2, camera2);
+		}
+	</script>
+
+</body>
+
+</html>
