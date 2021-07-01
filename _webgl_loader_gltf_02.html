@@ -12,8 +12,11 @@
 	<canvas id="c"></canvas>
 	<p>
 		<span id="first" class="diagram left"></span>
-		I love boxes. Presents come in boxes.
-		When I find a new box I'm always excited to find out what's inside.
+		Choose travel speed 
+		<div class="slidecontainer">
+			<input type="range" min="0" max="30" value="10" class="slider" id="wall-speed-input">
+			<output id="wall-speed-output"></output>
+		</div>
 	</p>
 	<p>
 		<span id="second" class="diagram right"></span>
@@ -32,7 +35,12 @@
 		var wallSpeed = 10;
 		var container1;
 		var camera1, light1, scene1, renderer1, controls1;
-
+		let wallRangeInput = document.getElementById("wall-speed-input");
+		let wallRangeOutput = document.getElementById("wall-speed-output");
+		wallRangeInput.addEventListener("input", function(){
+			wallRangeOutput.innerHTML = wallSpeed =  wallRangeInput.value;
+		})
+		addEventListener
 		var container2;
 		var camera2, light2, scene2, renderer2, controls2;
 		var clock = new THREE.Clock();
@@ -50,8 +58,12 @@
 
 			scene1 = new THREE.Scene();
 
-			light1 = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+			light1 = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.5);
 			scene1.add(light1);
+
+			const light = new THREE.PointLight( 0xff0000, 1, 20 );
+			light.position.set( 0,0,0 );
+			scene1.add( light );
 
 			var loader = new GLTFLoader().setPath('models/_Custom/infinty/');
 			loader.load('HugeWall.gltf', function (gltf) {
@@ -72,11 +84,9 @@
 				let m = scene1.getObjectByName("wall2");
 				if (m) {
 					m.position.y = 10;
-					console.log("wall2y")
 				}
 				render1();
 			});
-
 			loader.load('HugeWall.gltf', function (gltf) {
 				//gltf.scene1.traverse( function ( child ) {} );
 				gltf.scene.name = "wall3"
@@ -88,24 +98,29 @@
 				}
 				render1();
 			});
+			loader.load('HugeWall.gltf', function (gltf) {
+				//gltf.scene1.traverse( function ( child ) {} );
+				gltf.scene.name = "wall4"
+				scene1.add(gltf.scene);
+				let m = scene1.getObjectByName("wall4");
+				if (m) {
+					m.position.y = 30;
+				}
+				render1();
+			});
 			renderer1 = new THREE.WebGLRenderer({ antialias: true });
 			renderer1.setPixelRatio(window.devicePixelRatio);
 			renderer1.setSize(container1.offsetWidth, container1.offsetHeight);
 			renderer1.toneMapping = THREE.ACESFilmicToneMapping;
 			renderer1.toneMappingExposure = 0.8;
 			renderer1.outputEncoding = THREE.sRGBEncoding;
-			renderer1.setClearColor(new THREE.Color('skyblue'), 1.0)
+			renderer1.setClearColor(new THREE.Color("#1c1514"), 1.0)
 			container1.appendChild(renderer1.domElement);
 			console.log(container1.offsetWidth, container1.offsetHeight)
 
 			controls1 = new TrackballControls(camera1, renderer1.domElement);
 
 			controls1.target.set(0, 0, 0);
-			// controls1.update()
-
-
-
-
 		}
 
 		function init2() {
@@ -120,13 +135,24 @@
 			light2 = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
 			scene2.add(light2);
 
-			var loader = new GLTFLoader().setPath('models/_Custom/infinty/');
-			loader.load('HugeWall.gltf', function (gltf) {
-				//gltf.scene2.traverse( function ( child ) {} );
-				// scene2.add(gltf)
+			var loader = new GLTFLoader().setPath('models/_Custom/painting/');
+			loader.load('frame.gltf', function (gltf) {
+				gltf.scene.name = "frame"
+				scene2.add(gltf.scene);
+				let f = scene1.getObjectByName("frame");
+				if (f) {
+					f.position.y = 50;
+				}
 				render2();
 			});
-
+			loader.load('painting.gltf', function (gltf) {
+				gltf.scene.name = "paint"
+				scene2.add(gltf.scene);
+				let p = scene1.getObjectByName("paint");
+				if (p) {
+				}
+				render2();
+			});
 			renderer2 = new THREE.WebGLRenderer({ antialias: true });
 			renderer2.setPixelRatio(window.devicePixelRatio);
 			renderer2.setSize(container2.offsetWidth, container2.offsetHeight);
@@ -143,6 +169,7 @@
 			window.addEventListener('resize', onWindowResize, false);
 
 		}
+		
 		function animate() {
 			requestAnimationFrame(animate);
 			controls1.update();
@@ -150,24 +177,27 @@
 			let m1 = scene1.getObjectByName("wall1");
 			let m2 = scene1.getObjectByName("wall2");
 			let m3 = scene1.getObjectByName("wall3");
+			let m4 = scene1.getObjectByName("wall4");
 			if (m1 && m2 && m3) {
 				m1.position.y -= wallSpeed / 100;;
 				m2.position.y -= wallSpeed / 100;;
 				m3.position.y -= wallSpeed / 100;;
+				m4.position.y -= wallSpeed / 100;;
 				//  console.log(m.position)
 				if (m1.position.y < -5) {
-					m1.position.y = 25;
+					m1.position.y = 35;
 				}
 				if (m2.position.y < -5) {
-					m2.position.y = 25;
+					m2.position.y = 35;
 				}
 				if (m3.position.y < -5) {
-					m3.position.y = 25;
+					m3.position.y = 35;
+				}
+				if (m4.position.y < -5) {
+					m4.position.y = 35;
 				}
 			}
 			renderer1.render(scene1, camera1);
-			// mesh = scene1.getObjectByName("wall1");
-			// mesh.position.x += 0.1 * Math.PI/180;
 			controls2.update();
 			renderer2.render(scene2, camera2);
 		}
@@ -190,6 +220,7 @@
 		function render1() {
 			renderer1.render(scene1, camera1);
 		}
+		
 		function render2() {
 			renderer2.render(scene2, camera2);
 		}
