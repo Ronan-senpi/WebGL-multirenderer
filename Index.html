@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>three.js webgl - glTF loader (MOD)</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link type="text/css" rel="stylesheet" href="main.css">
+</head>
+
+<body>
+	<!-- <canvas id="c"></canvas> -->
+	<div class="center">Traveller !</div>
+	<div>
+		<span id="first" class="diagram left"></span>
+		Choose travel speed
+		<div class="slidecontainer">
+			<input type="range" min="0" max="30" value="10" class="slider" id="wall-speed-input">
+			<output id="wall-speed-output"></output>
+		</div>
+	</div>
+	<div class="center">Painting !</div>
+	<div>
+		<span id="second" class="diagram right"></span>
+		<div id="paint-input-container">
+			<label>Change paint by URL</label><br>
+			<input type="text" id="paint-url" />
+			<button id="paint-btn">Submit</button>
+			<p id="texture-error"></p>
+		</div>
+		<div>
+			click button for add image url to clipboard
+		</div>
+		<div class="sub-title">
+			Warnig : if the site does not allow cors it will not work
+		</div>
+		<div>
+			<p id="copy-success"></p>
+		</div>
+		<div>
+			<p id="copy-error"></p>
+		</div>
+		<div>
+			<button
+				onclick="copyToClipboard('Default Image','https://upload.wikimedia.org/wikipedia/commons/f/f6/Heiji_Monogatari_Emaki_-_Sanjo_scroll_part_5_-_v2.jpg')">
+				Default Image
+			</button>
+			<button
+				onclick="copyToClipboard('Image test 1','https://www3.nhk.or.jp/nhkworld/fr/ondemand/audio/j_art-20150702-1/images/ThHbJiAcPFchlt6BicnWtJPCf7LTlz2PPFnd7KRu.jpeg')">
+				Image test 1
+			</button>
+			<button
+				onclick="copyToClipboard('Image test 2','https://upload.wikimedia.org/wikipedia/commons/4/4b/The_Fuji_reflects_in_Lake_Kawaguchi%2C_seen_from_the_Misaka_pass_in_the_Kai_province.jpg')">
+				Image test 2
+			</button>
+			<button
+				onclick="copyToClipboard('Image test 3','https://upload.wikimedia.org/wikipedia/commons/e/e2/Waves_at_Matsushima.jpg')">
+				Image test 3
+			</button>
+		</div>
+
+	</div>
+	<script>
+		function copyToClipboard(name, toCopy) {
+			document.getElementById("copy-success").innerHTML = ''
+			document.getElementById("copy-error").innerHTML = ''
+			navigator.clipboard.writeText(toCopy).then(function () {
+				document.getElementById("copy-success").innerHTML = name + ' coppied'
+			}, function (err) {
+				document.getElementById("copy-error").innerHTML = name + ' copy faild'
+			});
+		}
+	</script>
+	<script type="module" src="index.js"></script>
+
+</body>
+
+</html>
