@@ -75,13 +75,7 @@ a, button, input, select {
 		cursor: pointer;
 	}
 
-#notSupported {
-	width: 50%;
-	margin: auto;
-	background-color: #f00;
-	margin-top: 20px;
-	padding: 10px;
-}
+
 .container-1{
 	height: 50%;
 	width: 50%;
@@ -97,20 +91,28 @@ a, button, input, select {
   }
   .diagram {
 	display: inline-block;
-	width: 500px;
-	height: 500px;
-  }
-  .left {
-	float: left;
-	margin-right: .25em;
-  }
-  .right {
-	float: right;
-	margin-left: .25em;
+	width: 800px;
+	height: 800px;
   }
   p, div {
 	margin: 1em auto;
-	max-width: 500px;
+	max-width: 800px;
 	font-size: xx-large;
   }
   
+.sub-title{
+	color: #595959;
+	font-size: 14px;
+	
+}
+#copy-success{
+	color: green;
+	font-size: 14px;
+}
+#copy-error, #texture-error{
+	color: red;
+	font-size: 14px;
+}
+.center{
+	text-align: center;
+}

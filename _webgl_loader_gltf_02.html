@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<title>three.js webgl - glTF loader (MOD)</title>
 	<meta charset="utf-8">
@@ -9,22 +8,68 @@
 </head>
 
 <body>
-	<canvas id="c"></canvas>
-	<p>
+	<!-- <canvas id="c"></canvas> -->
+	<div class="center">Traveller !</div>
+	<div>
 		<span id="first" class="diagram left"></span>
-		Choose travel speed 
+		Choose travel speed
 		<div class="slidecontainer">
 			<input type="range" min="0" max="30" value="10" class="slider" id="wall-speed-input">
 			<output id="wall-speed-output"></output>
 		</div>
-	</p>
-	<p>
+	</div>
+	<div class="center">Painting !</div>
+	<div>
 		<span id="second" class="diagram right"></span>
-		When I was a kid I dreamed of going on an expedition inside a pyramid
-		and finding a undiscovered tomb full of mummies and treasure.
-	</p>
+		<div id="paint-input-container">
+			<label>Change paint by URL</label><br>
+			<input type="text" id="paint-url" />
+			<button id="paint-btn">Submit</button>
+			<p id="texture-error"></p>
+		</div>
+		<div>
+			click button for add image url to clipboard
+		</div>
+		<div class="sub-title">
+			Warnig : if the site does not allow cors it will not work
+		</div>
+		<div>
+			<p id="copy-success"></p>
+		</div>
+		<div>
+			<p id="copy-error"></p>
+		</div>
+		<div>
+			<button
+				onclick="copyToClipboard('Default Image','https://upload.wikimedia.org/wikipedia/commons/f/f6/Heiji_Monogatari_Emaki_-_Sanjo_scroll_part_5_-_v2.jpg')">
+				Default Image
+			</button>
+			<button
+				onclick="copyToClipboard('Image test 1','https://www3.nhk.or.jp/nhkworld/fr/ondemand/audio/j_art-20150702-1/images/ThHbJiAcPFchlt6BicnWtJPCf7LTlz2PPFnd7KRu.jpeg')">
+				Image test 1
+			</button>
+			<button
+				onclick="copyToClipboard('Image test 2','https://upload.wikimedia.org/wikipedia/commons/4/4b/The_Fuji_reflects_in_Lake_Kawaguchi%2C_seen_from_the_Misaka_pass_in_the_Kai_province.jpg')">
+				Image test 2
+			</button>
+			<button
+				onclick="copyToClipboard('Image test 3','https://upload.wikimedia.org/wikipedia/commons/e/e2/Waves_at_Matsushima.jpg')">
+				Image test 3
+			</button>
+		</div>
 
-
+	</div>
+	<script>
+		function copyToClipboard(name, toCopy) {
+			document.getElementById("copy-success").innerHTML = ''
+			document.getElementById("copy-error").innerHTML = ''
+			navigator.clipboard.writeText(toCopy).then(function () {
+				document.getElementById("copy-success").innerHTML = name + ' coppied'
+			}, function (err) {
+				document.getElementById("copy-error").innerHTML = name + ' copy faild'
+			});
+		}
+	</script>
 	<script type="module">
 
 		import * as THREE from './build/three.module.js';
@@ -32,18 +77,32 @@
 		import { OrbitControls } from './jsm/controls/OrbitControls.js';
 		import { TrackballControls } from './jsm/controls/TrackballControls.js';
 		import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
+
+		const textureError =  document.getElementById("texture-error");
+
+		//Init 1
 		var wallSpeed = 10;
 		var container1;
 		var camera1, light1, scene1, renderer1, controls1;
 		let wallRangeInput = document.getElementById("wall-speed-input");
 		let wallRangeOutput = document.getElementById("wall-speed-output");
-		wallRangeInput.addEventListener("input", function(){
-			wallRangeOutput.innerHTML = wallSpeed =  wallRangeInput.value;
+		wallRangeInput.addEventListener("input", function () {
+			wallRangeOutput.innerHTML = wallSpeed = wallRangeInput.value;
 		})
-		addEventListener
+		//Init 2
 		var container2;
 		var camera2, light2, scene2, renderer2, controls2;
 		var clock = new THREE.Clock();
+		const rotationRad = -(Math.PI / 2);
+		const defaultTexture = 'https://upload.wikimedia.org/wikipedia/commons/f/f6/Heiji_Monogatari_Emaki_-_Sanjo_scroll_part_5_-_v2.jpg';
+
+		let paintUrlInput = document.getElementById('paint-url');
+		let paintSubmitInput = document.getElementById('paint-btn');
+		paintSubmitInput.addEventListener("click", function () {
+			loadPaintTexture(paintUrlInput.value)
+		});
+
+		//commun event
 		window.addEventListener('resize', onWindowResize, false);
 		init1();
 		init2();
@@ -61,24 +120,20 @@
 			light1 = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.5);
 			scene1.add(light1);
 
-			const light = new THREE.PointLight( 0xff0000, 1, 20 );
-			light.position.set( 0,0,0 );
-			scene1.add( light );
+			const light = new THREE.PointLight(0xff0000, 1, 20);
+			light.position.set(0, 0, 0);
+			scene1.add(light);
 
 			var loader = new GLTFLoader().setPath('models/_Custom/infinty/');
 			loader.load('HugeWall.gltf', function (gltf) {
-				//gltf.scene1.traverse( function ( child ) {} );
 				gltf.scene.name = "wall1"
 				scene1.add(gltf.scene);
 				let m = scene1.getObjectByName("wall1");
 				if (m) {
-					// m.rotation.y = 180
-					console.log("wall1")
 				}
 				render1();
 			});
 			loader.load('HugeWall.gltf', function (gltf) {
-				//gltf.scene1.traverse( function ( child ) {} );
 				gltf.scene.name = "wall2"
 				scene1.add(gltf.scene);
 				let m = scene1.getObjectByName("wall2");
@@ -88,18 +143,15 @@
 				render1();
 			});
 			loader.load('HugeWall.gltf', function (gltf) {
-				//gltf.scene1.traverse( function ( child ) {} );
 				gltf.scene.name = "wall3"
 				scene1.add(gltf.scene);
 				let m = scene1.getObjectByName("wall3");
 				if (m) {
 					m.position.y = 20;
-					console.log("wall3x")
 				}
 				render1();
 			});
 			loader.load('HugeWall.gltf', function (gltf) {
-				//gltf.scene1.traverse( function ( child ) {} );
 				gltf.scene.name = "wall4"
 				scene1.add(gltf.scene);
 				let m = scene1.getObjectByName("wall4");
@@ -116,7 +168,6 @@
 			renderer1.outputEncoding = THREE.sRGBEncoding;
 			renderer1.setClearColor(new THREE.Color("#1c1514"), 1.0)
 			container1.appendChild(renderer1.domElement);
-			console.log(container1.offsetWidth, container1.offsetHeight)
 
 			controls1 = new TrackballControls(camera1, renderer1.domElement);
 
@@ -124,11 +175,10 @@
 		}
 
 		function init2() {
-
 			container2 = document.getElementById("second")
 
-			camera2 = new THREE.PerspectiveCamera(45, container2.offsetWidth / container2.offsetHeight, 0.25, 20);
-			camera2.position.set(0.0, 0.0, 4.);
+			camera2 = new THREE.PerspectiveCamera(45, container2.offsetWidth / container2.offsetHeight, 0.25, 40);
+			camera2.position.set(0.0, 0.0, 15);
 
 			scene2 = new THREE.Scene();
 
@@ -139,29 +189,29 @@
 			loader.load('frame.gltf', function (gltf) {
 				gltf.scene.name = "frame"
 				scene2.add(gltf.scene);
-				let f = scene1.getObjectByName("frame");
+				let f = scene2.getObjectByName("frame");
 				if (f) {
-					f.position.y = 50;
+					f.rotateY(rotationRad);
 				}
 				render2();
 			});
-			loader.load('painting.gltf', function (gltf) {
-				gltf.scene.name = "paint"
-				scene2.add(gltf.scene);
-				let p = scene1.getObjectByName("paint");
-				if (p) {
-				}
-				render2();
-			});
+
+			const geometry = new THREE.PlaneGeometry(9.4, 5.2);
+			const material = new THREE.MeshBasicMaterial({ color: 0xE4E5E2, side: THREE.DoubleSide });
+			const plane = new THREE.Mesh(geometry, material);
+			plane.name = "paint";
+			scene2.add(plane);
+
+			loadPaintTexture(defaultTexture);
+
 			renderer2 = new THREE.WebGLRenderer({ antialias: true });
 			renderer2.setPixelRatio(window.devicePixelRatio);
 			renderer2.setSize(container2.offsetWidth, container2.offsetHeight);
 			renderer2.toneMapping = THREE.ACESFilmicToneMapping;
 			renderer2.toneMappingExposure = 0.8;
 			renderer2.outputEncoding = THREE.sRGBEncoding;
-			renderer2.setClearColor(new THREE.Color('skyblue'), 1.0)
+			renderer2.setClearColor(new THREE.Color('#B6AA95'), 1.0)
 			container2.appendChild(renderer2.domElement);
-			console.log(container2.offsetWidth, container2.offsetHeight)
 
 			controls2 = new TrackballControls(camera2, renderer2.domElement);
 			controls2.target.set(0, 0, 0);
@@ -169,21 +219,24 @@
 			window.addEventListener('resize', onWindowResize, false);
 
 		}
-		
+
 		function animate() {
 			requestAnimationFrame(animate);
+			animateScene1();
+			animateScene2();
+		}
+
+		function animateScene1() {
 			controls1.update();
-			// console.log(scene1)
 			let m1 = scene1.getObjectByName("wall1");
 			let m2 = scene1.getObjectByName("wall2");
 			let m3 = scene1.getObjectByName("wall3");
 			let m4 = scene1.getObjectByName("wall4");
-			if (m1 && m2 && m3) {
-				m1.position.y -= wallSpeed / 100;;
-				m2.position.y -= wallSpeed / 100;;
-				m3.position.y -= wallSpeed / 100;;
-				m4.position.y -= wallSpeed / 100;;
-				//  console.log(m.position)
+			if (m1 && m2 && m3 && m4) {
+				m1.position.y -= wallSpeed / 100;
+				m2.position.y -= wallSpeed / 100;
+				m3.position.y -= wallSpeed / 100;
+				m4.position.y -= wallSpeed / 100;
 				if (m1.position.y < -5) {
 					m1.position.y = 35;
 				}
@@ -198,8 +251,23 @@
 				}
 			}
 			renderer1.render(scene1, camera1);
+		}
+
+		function animateScene2() {
 			controls2.update();
 			renderer2.render(scene2, camera2);
+		}
+
+		function loadPaintTexture(textureUrl) {
+			new THREE.TextureLoader().load(textureUrl, loadPaintCallBack, undefined, function (err) { textureError.innerHTML = 'An error happened.';});
+		}
+		
+		function loadPaintCallBack(texture) {
+			let p = scene2.getObjectByName("paint");
+			if (p) {
+				p.material.map = texture;
+				p.material.needsUpdate = true;
+			}
 		}
 
 		function onWindowResize() {
@@ -220,7 +288,7 @@
 		function render1() {
 			renderer1.render(scene1, camera1);
 		}
-		
+
 		function render2() {
 			renderer2.render(scene2, camera2);
 		}
