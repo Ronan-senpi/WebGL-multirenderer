@@ -1,13 +1,18 @@
 body {
 	margin: 0;
-	background-color: rgb(39, 39, 39);
-	color: #fff;
 	font-family: Monospace;
 	font-size: 13px;
 	line-height: 24px;
 	overscroll-behavior: none;
 }
-
+.darkMode{
+	background-color: #272727;
+	color: #fff;
+};
+.whiteMode{
+	background-color: #EDEDED;
+	color: #000;
+}
 a {
 	color: #ff0;
 	text-decoration: none;
@@ -61,11 +66,11 @@ a, button, input, select {
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
-	background: rgba(0,0,0,0.7);
+	/* background: rgba(0,0,0,0.7); */
 }
 
 	#overlay button {
-		background: transparent;
+		/* background: transparent; */
 		border: 0;
 		border: 1px solid rgb(255, 255, 255);
 		border-radius: 4px;

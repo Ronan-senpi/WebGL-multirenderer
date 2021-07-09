@@ -7,7 +7,8 @@
 	<link type="text/css" rel="stylesheet" href="main.css">
 </head>
 
-<body>
+<body class="darkMode" id="body">
+	<button onclick="toggleDarkMode()"  >Toggle darkmode</button>
 	<!-- <canvas id="c"></canvas> -->
 	<div class="center">Traveller !</div>
 	<div>
@@ -60,6 +61,9 @@
 
 	</div>
 	<script>
+		var darkMode = true;
+		var darkModeClass = 'darkMode';
+		var whiteModeClass = 'whiteMode';
 		function copyToClipboard(name, toCopy) {
 			document.getElementById("copy-success").innerHTML = ''
 			document.getElementById("copy-error").innerHTML = ''
@@ -68,6 +72,17 @@
 			}, function (err) {
 				document.getElementById("copy-error").innerHTML = name + ' copy faild'
 			});
+		}
+		function toggleDarkMode(){
+			if (darkMode){
+				document.getElementById("body").classList.remove(darkModeClass);
+				document.getElementById("body").classList.add(whiteModeClass);
+				darkMode = false;
+			}else{
+				document.getElementById("body").classList.remove(whiteModeClass);
+				document.getElementById("body").classList.add(darkModeClass);
+				darkMode = true;
+			}
 		}
 	</script>
 	<script type="module" src="index.js"></script>
