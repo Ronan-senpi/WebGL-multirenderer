@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<title>three.js webgl - glTF loader (MOD)</title>
 	<meta charset="utf-8">
@@ -8,7 +9,7 @@
 </head>
 
 <body class="darkMode" id="body">
-	<button onclick="toggleDarkMode()"  >Toggle darkmode</button>
+	<button onclick="toggleDarkMode()">Toggle darkmode</button>
 	<!-- <canvas id="c"></canvas> -->
 	<div class="center">Traveller !</div>
 	<div>
@@ -23,23 +24,19 @@
 	<div>
 		<span id="second" class="diagram right"></span>
 		<div id="paint-input-container">
-			<label>Change paint by URL</label><br>
+			<label>Change paint by URL</label>
+			<span class="sub-title">Warnig : if the site does not allow cors it will not work</span><br>
 			<input type="text" id="paint-url" />
 			<button id="paint-btn">Submit</button>
 			<p id="texture-error"></p>
 		</div>
 		<div>
 			click button for add image url to clipboard
+			<span id="copy-success"></span>
+			<span id="copy-error"></span>
 		</div>
-		<div class="sub-title">
-			Warnig : if the site does not allow cors it will not work
-		</div>
-		<div>
-			<p id="copy-success"></p>
-		</div>
-		<div>
-			<p id="copy-error"></p>
-		</div>
+
+
 		<div>
 			<button
 				onclick="copyToClipboard('Default Image','https://upload.wikimedia.org/wikipedia/commons/f/f6/Heiji_Monogatari_Emaki_-_Sanjo_scroll_part_5_-_v2.jpg')">
@@ -57,6 +54,7 @@
 				onclick="copyToClipboard('Image test 3','https://upload.wikimedia.org/wikipedia/commons/e/e2/Waves_at_Matsushima.jpg')">
 				Image test 3
 			</button>
+
 		</div>
 
 	</div>
@@ -73,12 +71,12 @@
 				document.getElementById("copy-error").innerHTML = name + ' copy faild'
 			});
 		}
-		function toggleDarkMode(){
-			if (darkMode){
+		function toggleDarkMode() {
+			if (darkMode) {
 				document.getElementById("body").classList.remove(darkModeClass);
 				document.getElementById("body").classList.add(whiteModeClass);
 				darkMode = false;
-			}else{
+			} else {
 				document.getElementById("body").classList.remove(whiteModeClass);
 				document.getElementById("body").classList.add(darkModeClass);
 				darkMode = true;
