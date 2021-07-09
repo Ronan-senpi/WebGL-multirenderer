@@ -47,7 +47,7 @@
 			light1 = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.5);
 			scene1.add(light1);
 
-			const light = new THREE.PointLight(0xff0000, 1, 20);
+			const light = new THREE.PointLight(0xd2a689, 1, 40);
 			light.position.set(0, 0, 0);
 			scene1.add(light);
 
